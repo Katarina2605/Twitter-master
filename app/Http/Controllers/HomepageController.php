@@ -16,7 +16,7 @@ class HomepageController extends Controller
             ->get()
         ;
 
-        return view('homepage.index', [
+        return view('home.index', [
             'articles' => $articles,
         ]);
     }
