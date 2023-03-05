@@ -27,6 +27,7 @@ class UserController extends Controller
             'users' => $users,
         ]);
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -62,9 +63,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
     public function edit(User $user)
     {
+        // On vérifie que l'utilisateur courant est un administrateur
+        Gate::authorize('update', $user);
+
         // On récupère tous les rôles disponibles
         // On utilise la méthode pluck() pour récupérer uniquement le nom des rôles dans un tableau
         $roles = \App\Models\Role::pluck('name');
@@ -83,6 +86,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        // On vérifie que l'utilisateur courant est un administrateur
+        Gate::authorize('update', $user);
+
         // Validation du rôle
         $request->validate([
             // On vérifie que le rôle est bien un des rôles définis dans le modèle Role

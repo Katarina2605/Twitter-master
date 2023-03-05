@@ -23,4 +23,3 @@ class CommentPolicy
         return \App\Models\Role::ADMIN === $user->role->name || $user->id === $comment->user_id;
     }
 }
-

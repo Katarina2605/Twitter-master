@@ -10,7 +10,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +23,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar',
     ];
 
     /**
@@ -43,9 +44,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function tweets()
+    public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Tweet::class);
+        return $this->hasMany(Article::class);
     }
 
     public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -53,9 +54,28 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function comments()
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function like(Likeable $likeable): self
+    {
+        if ($this->hasLiked($likeable)) {
+            return $this;
+        }
+
+        (new Like())
+            ->user()->associate($this)
+            ->likeable()->associate($likeable)
+            ->save();
+
+        return $this;
     }
 
 }

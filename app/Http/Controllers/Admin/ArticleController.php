@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ArticleStoreRequest;
 use App\Http\Requests\Admin\UpdateArticleRequest;
-use App\Models\Tweet;
+use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
@@ -69,7 +69,6 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index');
     }
-
 
     /**
      * Display the specified resource.

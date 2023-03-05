@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use Illuminate\Http\Request;
 
 class HomepageController extends Controller
 {
@@ -16,7 +15,7 @@ class HomepageController extends Controller
             ->get()
         ;
 
-        return view('home.index', [
+        return view('homepage.index', [
             'articles' => $articles,
         ]);
     }

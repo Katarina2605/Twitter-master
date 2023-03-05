@@ -76,5 +76,4 @@ class ArticleController extends Controller
         // On redirige vers la page de l'article
         return redirect()->back();
     }
-
 }

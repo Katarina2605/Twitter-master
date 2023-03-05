@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -15,10 +19,45 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomepageController::class, 'index'])->name('home');
+/*====================================
+=            Front Office            =
+====================================*/
+
+// Page d'accueil
+Route::get('/', [HomepageController::class, 'index']);
+
+// Liste des articles
+Route::get('/articles', [ArticleController::class, 'index'])->name('front.articles.index');
+// Détail d'un article
+Route::get('/articles/{id}', [ArticleController::class, 'show'])->name('front.articles.show');
+
+// Gestion des commentaires, uniquement pour les utilisateurs authentifiés
+Route::middleware('auth')->group(function () {
+    // Ajout d'un commentaire
+    Route::post('/articles/{article}/comments', [ArticleController::class, 'addComment'])->name('front.articles.comments.add');
+    // Suppression d'un commentaire
+    Route::delete('/articles/{article}/comments/{comment}', [ArticleController::class, 'deleteComment'])->name('front.articles.comments.delete');
+});
+
+// Page à propos
+Route::get('/about', [AboutController::class, 'index'])->name('about.index');
+
+/*====================================
+=            Back Office             =
+====================================*/
+
+// Page d'accueil du back office
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    // Gestion des articles (création, modification, suppression)
+    Route::resource('/articles', AdminArticleController::class)->except(['show']);
+
+    // Gestion des utilisateurs (Détails et changement de rôle)
+    Route::resource('/users', UserController::class)->only(['index', 'edit', 'update']);
+});
 
 // Gestion du profil utilisateur
 Route::middleware('auth')->group(function () {
@@ -31,30 +70,5 @@ Route::middleware('auth')->group(function () {
 // Détail d'un profil utilisateur
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
-    // Gestion des articles (création, modification, suppression)
-    Route::resource('/articles', AdminArticleController::class);
-
-    // Gestion des utilisateurs (Détails et changement de rôle)
-    Route::resource('/users', UserController::class);
-});
-
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
-    // Gestion des articles (création, modification, suppression)
-    Route::resource('/articles', AdminArticleController::class);
-
-    // Gestion des utilisateurs (Détails et changement de rôle)
-    Route::resource('/users', UserController::class);
-});
-
-Route::get('/articles/{id}', [ArticleController::class, 'show'])->name('front.articles.show');
-
-// Gestion des commentaires, uniquement pour les utilisateurs authentifiés
-Route::middleware('auth')->group(function () {
-    // Ajout d'un commentaire
-    Route::post('/articles/{article}/comments', [ArticleController::class, 'addComment'])->name('front.articles.comments.add');
-    // Suppression d'un commentaire
-    Route::delete('/articles/{article}/comments/{comment}', [ArticleController::class, 'deleteComment'])->name('front.articles.comments.delete');
-});
-
-require __DIR__ . '/auth.php';
+// Authentification
+require __DIR__.'/auth.php';
