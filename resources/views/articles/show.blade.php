@@ -30,7 +30,10 @@
     <div class="mt-8 flex items-center justify-left">
     <form action="{{ route('articles.like', $article) }}" method="POST" class="font-bold bg-white text-gray-700 px-4 py-2 rounded shadow">
         @csrf
-        <button type="submit">J'aime</button>
+        <button type="submit"><img class="fit-picture"
+                                   src="https://em-content.zobj.net/thumbs/160/twitter/154/heavy-black-heart_2764.png"
+                                   width="15px"
+                                   alt="Like">J'aime</button>
     </form>
     </div>
 
