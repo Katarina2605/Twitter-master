@@ -17,6 +17,7 @@ class ArticleController extends Controller
             ->orWhereHas('user', function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%'.$request->query('search').'%');
             })
+            ->withCount('likes')
             ->withCount('comments')
             ->orderByDesc('published_at')
             ->paginate(12)
@@ -84,10 +85,9 @@ class ArticleController extends Controller
         $like->user_id = auth()->id();
         $like->article_id = $article->id;
         $like->save();
-        $article->likes++;
-        $article->save();
 
         return back();
     }
 
 }
+

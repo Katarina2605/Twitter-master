@@ -59,3 +59,23 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 }
+
+class Like extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+}
+
+
