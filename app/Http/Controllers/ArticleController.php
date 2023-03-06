@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Models\Like;
 
 class ArticleController extends Controller
 {
@@ -76,4 +77,17 @@ class ArticleController extends Controller
         // On redirige vers la page de l'article
         return redirect()->back();
     }
+
+    public function like(Article $article)
+    {
+        $like = new Like;
+        $like->user_id = auth()->id();
+        $like->article_id = $article->id;
+        $like->save();
+        $article->likes++;
+        $article->save();
+
+        return back();
+    }
+
 }

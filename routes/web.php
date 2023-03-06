@@ -70,5 +70,8 @@ Route::middleware('auth')->group(function () {
 // Détail d'un profil utilisateur
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
+//LIKES
+Route::post('/articles/{article}/like', [ArticleController::class, 'like'])->name('articles.like');
+
 // Authentification
 require __DIR__.'/auth.php';

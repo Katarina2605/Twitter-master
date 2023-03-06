@@ -27,7 +27,14 @@
         </div>
     </a>
 
-    <div class="mt-8 flex items-center justify-center">
+    <div class="mt-8 flex items-center justify-left">
+    <form action="{{ route('articles.like', $article) }}" method="POST" class="font-bold bg-white text-gray-700 px-4 py-2 rounded shadow">
+        @csrf
+        <button type="submit">J'aime</button>
+    </form>
+    </div>
+
+    <div class="mt-8 flex items-center justify-center" >
         <a href="{{ route('front.articles.index') }}" class="font-bold bg-white text-gray-700 px-4 py-2 rounded shadow">
             Retour à la liste des articles
         </a>
@@ -139,4 +146,5 @@
             </form>
         </x-modal>
     </div>
+
 </x-guest-layout>
