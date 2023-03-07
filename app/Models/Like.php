@@ -16,4 +16,10 @@ class Like extends Model
     {
         return $this->belongsTo(Article::class);
     }
+
+    public static function countLikesForArticle($articleId)
+    {
+        return self::where('article_id', $articleId)->count();
+    }
 }
+
