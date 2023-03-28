@@ -17,5 +17,13 @@
                 {{ $article->comments_count }}
             </div>
         </div>
+
+        <div class="flex items-center space-x-2">
+            <x-heroicon-o-heart class="h-5 w-5 text-gray-500" />
+            <div class="text-sm text-gray-500">
+                {{ $article->likes_count }}
+            </div>
+        </div>
+
     </div>
 </a>

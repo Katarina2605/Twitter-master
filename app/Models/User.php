@@ -64,18 +64,4 @@ class User extends Authenticatable
         return $this->hasMany(Like::class);
     }
 
-    public function like(Likeable $likeable): self
-    {
-        if ($this->hasLiked($likeable)) {
-            return $this;
-        }
-
-        (new Like())
-            ->user()->associate($this)
-            ->likeable()->associate($likeable)
-            ->save();
-
-        return $this;
-    }
-
 }

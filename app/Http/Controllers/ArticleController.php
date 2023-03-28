@@ -4,24 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Comment;
-use Illuminate\Http\Request;
 use App\Models\Like;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
     public function index(Request $request)
     {
         $articles = Article::where('published_at', '<', now())
-            ->where('body', 'LIKE', '%'.$request->query('search').'%')
-            ->orWhere('title', 'LIKE', '%'.$request->query('search').'%')
+            ->where('body', 'LIKE', '%' . $request->query('search') . '%')
+            ->orWhere('title', 'LIKE', '%' . $request->query('search') . '%')
             ->orWhereHas('user', function ($query) use ($request) {
-                $query->where('name', 'LIKE', '%'.$request->query('search').'%');
+                $query->where('name', 'LIKE', '%' . $request->query('search') . '%');
             })
-            ->withCount('likes')
             ->withCount('comments')
+            ->withCount('likes')
             ->orderByDesc('published_at')
-            ->paginate(12)
-        ;
+            ->paginate(12);
 
         return view('articles.index', [
             'articles' => $articles,
@@ -31,20 +31,24 @@ class ArticleController extends Controller
     public function show($id)
     {
         // On récupère l'article et on renvoie une erreur 404 si l'article n'existe pas
-        $article = Article::findOrFail($id);
+        $article = Article::withCount('likes')->findOrFail($id);
         // On récupère les commentaires de l'article, avec les utilisateurs associés (via la relation)
         // On les trie par date de création (le plus ancien en premier)
         $comments = $article
             ->comments()
             ->with('user')
             ->orderBy('created_at')
-            ->get()
-        ;
+            ->get();
+        $liked=false;
+        if (Auth::check()) {
+            $liked=$article->likes()->where('user_id', Auth::id())->exists();
+        }
 
         // On renvoie la vue avec les données
         return view('articles.show', [
             'article' => $article,
             'comments' => $comments,
+            'liked' => $liked,
         ]);
     }
 
@@ -79,15 +83,23 @@ class ArticleController extends Controller
         return redirect()->back();
     }
 
-    public function like(Article $article)
+    public function like($articleId)
     {
-        $like = new Like;
-        $like->user_id = auth()->id();
-        $like->article_id = $article->id;
-        $like->save();
+        if (!Auth::check()) {
+            return redirect()->back();
+        }
+        $user = Auth::user();
+        $article = Article::findOrFail($articleId);
 
-        return back();
+        if ($article->likes()->where('user_id', $user->id)->exists()) {
+            $article->likes()->where('user_id', $user->id)->get()->first()->delete();
+        } else {
+            $like = new Like();
+            $like->user_id = $user->id;
+            $article->likes()->save($like);
+        }
+
+        return redirect()->back()->with('success', 'Article aimé avec succès.');
     }
 
 }
-

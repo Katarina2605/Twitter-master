@@ -7,19 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Like extends Model
 {
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    use HasFactory;
 
     public function article()
     {
         return $this->belongsTo(Article::class);
     }
 
-    public static function countLikesForArticle($articleId)
+    public function user()
     {
-        return self::where('article_id', $articleId)->count();
+        return $this->belongsTo(User::class);
     }
 }
-

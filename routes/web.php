@@ -69,9 +69,9 @@ Route::middleware('auth')->group(function () {
 
 // Détail d'un profil utilisateur
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
-
-//LIKES
-Route::post('/articles/{article}/like', [ArticleController::class, 'like'])->name('articles.like');
-
+//LIKE
+Route::middleware(['auth', 'verified'])->post('/articles/{article}/like', [ArticleController::class, 'like'])->name('articles.like');
+//Liste des membres
+Route::get('/members', [HomepageController::class, 'members'])->name('members.index');
 // Authentification
 require __DIR__.'/auth.php';

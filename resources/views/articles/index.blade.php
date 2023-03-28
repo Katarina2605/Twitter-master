@@ -1,9 +1,9 @@
 <x-guest-layout>
-    <h1 class="font-bold text-xl mb-4">Liste des articles</h1>
+    <h1 class="font-bold text-xl mb-4">Liste des Tweets</h1>
 
     <form action="{{ route('front.articles.index') }}" method="GET" class="mb-4">
         <div class="flex items-center">
-            <input type="text" name="search" id="search" placeholder="Rechercher un article"
+            <input type="text" name="search" id="search" placeholder="Rechercher un Tweet"
                 class="flex-grow border border-gray-300 rounded shadow px-4 py-2 mr-4" value="{{ request()->search }}"
                 autofocus>
             <button type="submit" class="bg-white text-gray-600 px-4 py-2 rounded-lg shadow">

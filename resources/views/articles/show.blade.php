@@ -27,20 +27,23 @@
         </div>
     </a>
 
-    <div class="mt-8 flex items-center justify-left">
-    <form action="{{ route('articles.like', $article) }}" method="POST" class="font-bold bg-white text-gray-700 px-4 py-2 rounded shadow">
-        @csrf
-        <button type="submit"><img class="fit-picture"
-                                   src="https://em-content.zobj.net/thumbs/160/twitter/154/heavy-black-heart_2764.png"
-                                   width="15px"
-                                   alt="Like">J'aime</button>
-    </form>
-    </div>
-
-    <div class="mt-8 flex items-center justify-center" >
+    <div class="mt-8 flex items-center justify-center space-x-8">
         <a href="{{ route('front.articles.index') }}" class="font-bold bg-white text-gray-700 px-4 py-2 rounded shadow">
-            Retour à la liste des articles
+            Retour à la liste des Tweets
         </a>
+<form method="post" action="{{ route('articles.like', $article) }}">
+    @csrf
+    <button type="submit" class="flex space-x-2 font-bold bg-white text-gray-700 px-4 py-2 rounded shadow">
+            @if($liked)
+            <x-heroicon-s-heart class="h-5 w-5 text-gray-500" />
+            @else
+            <x-heroicon-o-heart class="h-5 w-5 text-gray-500" />
+            @endif
+            <div class="text-sm text-gray-500">
+                {{ $article->likes_count }}
+            </div>
+        </button>
+</form>
     </div>
 
     <div class="mt-8">
@@ -149,5 +152,4 @@
             </form>
         </x-modal>
     </div>
-
 </x-guest-layout>

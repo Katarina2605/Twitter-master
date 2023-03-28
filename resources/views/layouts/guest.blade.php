@@ -35,14 +35,33 @@
                     </div>
                     <div class="flex items-center space-x-8 justify-end">
                         <a class="font hover:text-red-700 transition"
-                            href="{{ route('front.articles.index') }}">Articles</a>
+                            href="{{ route('front.articles.index') }}">Tweets</a>
 
                         <a class="font hover:text-red-700 transition" href="{{ route('about.index') }}">À
                             propos</a>
 
+                        <a class="font hover:text-red-700 transition" href="{{ route('members.index') }}">Membres</a>
+                        @guest()
                         <a class="font-bold hover:text-red-700 transition" href="{{ route('login') }}">Se connecter</a>
 
                         <a class="font-bold hover:text-red-700 transition" href="{{ route('register') }}">S'inscrire</a>
+                        @endguest()
+
+                        @auth()
+                                <a class="font-bold hover:text-red-700 transition" href="{{route('profile.edit')}}">
+                                    {{ __('Profil') }}
+                                </a>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <a class="font-bold hover:text-red-700 transition" href="route('logout')"
+                                                 onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                    {{ __('Se déconnecter') }}
+                                </a>
+                            </form>
+                        @endauth()
                     </div>
                 </nav>
             </header>
